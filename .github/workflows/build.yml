@@ -15,7 +15,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          ENV: ${{ secrets.env }}
         run: |
+          echo "ENV: ${{ env.ENV}}"
           echo "AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID}}"
           echo "AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY}}"
           echo "AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION}}"
