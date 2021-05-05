@@ -10,12 +10,12 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm -v
       - name: Check secret
-      id: checksecret_job
-      env:
+        id: checksecret_job
+        env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      run: |
+        run: |
           echo "AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID}}"
           echo "AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY}}"
           echo "AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION}}"
