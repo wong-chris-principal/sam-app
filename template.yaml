@@ -17,7 +17,9 @@ Resources:
   MyTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
-      PrimaryKey: name
+      PrimaryKey:
+        Name: id
+        Type: String
       TableName: my-table
   CreateBookFunction:
     Type: AWS::Serverless::Function
