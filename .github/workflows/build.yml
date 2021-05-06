@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
 jobs:
-  check-npm-version:
+  build-sam-app:
     runs-on: ubuntu-latest
     environment: 
       name: uat
