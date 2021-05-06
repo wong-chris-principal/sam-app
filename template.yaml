@@ -1,30 +1,81 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   sam-app
 
   Sample SAM Template for sam-app
-  
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
+    Environment:
+      Variables:
+        TABLE_NAME: my-table
 
 Resources:
-  HelloWorldFunction:
+  MyTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey: name
+      TableName: my-table
+  CreateBookFunction:
     Type: AWS::Serverless::Function
     Properties:
-      PackageType: Image
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MyTable
+      CodeUri: books/
+      Handler: app.create
+      Runtime: nodejs14.x
       Events:
-        HelloWorld:
+        CreateBook:
           Type: Api
           Properties:
-            Path: /hello
+            Path: /book
+            Method: create
+  ListBooksFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: books/
+      Handler: app.list
+      Runtime: nodejs12.x
+      Events:
+        ListBooks:
+          Type: Api
+          Properties:
+            Path: /books
             Method: get
+  DeleteBooksFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: books/
+      Handler: app.delete
+      Runtime: nodejs12.x
+      Events:
+        ListBooks:
+          Type: Api
+          Properties:
+            Path: /books/{name}
+            Method: delete
     Metadata:
       DockerTag: nodejs14.x-v1
-      DockerContext: ./hello-world
+      DockerContext: ./books
       Dockerfile: Dockerfile
+  # HelloWorldFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     PackageType: Image
+  #     Events:
+  #       HelloWorld:
+  #         Type: Api
+  #         Properties:
+  #           Path: /hello
+  #           Method: get
+  #   Metadata:
+  #     DockerTag: nodejs14.x-v1
+  #     DockerContext: ./hello-world
+  #     Dockerfile: Dockerfile
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
