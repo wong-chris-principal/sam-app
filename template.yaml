@@ -35,7 +35,7 @@ Resources:
           Type: Api
           Properties:
             Path: /book
-            Method: create
+            Method: post
   ListBooksFunction:
     Type: AWS::Serverless::Function
     Properties:
