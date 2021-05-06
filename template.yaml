@@ -37,15 +37,14 @@ Resources:
             Path: /book
             Method: post
   ListBooksFunction:
-    Type: AWS::Serverless::Function
+    Type: AWS::Serverless::Function  
     Properties:
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !Ref MyTable    
-    Properties:
+            TableName: !Ref MyTable  
       CodeUri: books/
       Handler: app.list
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
       Events:
         ListBooks:
           Type: Api
@@ -58,10 +57,9 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref MyTable    
-    Properties:
       CodeUri: books/
       Handler: app.delete
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
       Events:
         ListBooks:
           Type: Api
@@ -91,12 +89,12 @@ Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  ListBooksFunction:
+  ListBooksApi:
     Description: "List books"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
-#   CreateBookFunction:
-#     Description: "Hello World Lambda Function ARN"
-#     Value: !GetAtt CreateBookFunction.Arn
-#   CreateBookFunctionIamRole:
-#     Description: "Implicit IAM Role created for Hello World function"
-#     Value: !GetAtt CreateBookFunctionRole.Arn
+  ListBooksFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt ListBooksFunction.Arn
+  ListBooksFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt ListBooksFunctionRole.Arn
