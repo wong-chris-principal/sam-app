@@ -14,6 +14,61 @@ Globals:
         TABLE_NAME: my-table
 
 Resources:
+  CloudFrontOriginAccessIdentity:
+    Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: "Serverless website OA"
+
+  CloudfrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Comment: "Cloudfront distribution for serverless website"
+        DefaultRootObject: "index.html"
+        Enabled: true
+        HttpVersion: http2
+        # List of origins that Cloudfront will connect to
+        Origins:
+          - Id: s3-website
+            DomainName: !GetAtt S3Bucket.DomainName
+            S3OriginConfig:
+              # Restricting Bucket access through an origin access identity
+              OriginAccessIdentity:
+                Fn::Sub: "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
+        # To connect the CDN to the origins you need to specify behaviours
+        DefaultCacheBehavior:
+          # Compress resources automatically ( gzip )
+          Compress: "true"
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          ForwardedValues:
+            QueryString: false
+          TargetOriginId: s3-website
+          ViewerProtocolPolicy: redirect-to-https
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Change bucket name to reflect your website
+      BucketName: pihk-e-enrollment-sam
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+      # Restricting access to cloudfront only.
+        Statement:
+          -
+            Effect: Allow
+            Action: 's3:GetObject'
+            Resource:
+              - !Sub "arn:aws:s3:::${S3Bucket}/*"
+            Principal:
+              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginAccessIdentity}"
+
   MyTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
@@ -21,69 +76,75 @@ Resources:
         Name: id
         Type: String
       TableName: my-table
-  CreateBookFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref MyTable
-      CodeUri: books/
-      Handler: app.create
-      Runtime: nodejs14.x
-      Events:
-        CreateBook:
-          Type: Api
-          Properties:
-            Path: /book
-            Method: post
-  ListBooksFunction:
-    Type: AWS::Serverless::Function  
-    Properties:
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref MyTable  
-      CodeUri: books/
-      Handler: app.list
-      Runtime: nodejs14.x
-      Events:
-        ListBooks:
-          Type: Api
-          Properties:
-            Path: /books
-            Method: get
-  DeleteBooksFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref MyTable    
-      CodeUri: books/
-      Handler: app.delete
-      Runtime: nodejs14.x
-      Events:
-        ListBooks:
-          Type: Api
-          Properties:
-            Path: /books/{name}
-            Method: delete
-    Metadata:
-      DockerTag: nodejs14.x-v1
-      DockerContext: ./books
-      Dockerfile: Dockerfile
-  # HelloWorldFunction:
+  # CreateBookFunction:
   #   Type: AWS::Serverless::Function
   #   Properties:
-  #     PackageType: Image
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref MyTable
+  #     CodeUri: books/
+  #     Handler: app.create
+  #     Runtime: nodejs14.x
   #     Events:
-  #       HelloWorld:
+  #       CreateBook:
   #         Type: Api
   #         Properties:
-  #           Path: /hello
+  #           Path: /book
+  #           Method: post
+  # ListBooksFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref MyTable
+  #     # CodeUri: books/
+  #     # Handler: app.list
+  #     # Runtime: nodejs14.x
+  #     PackageType: Image
+  #     Events:
+  #       ListBooks:
+  #         Type: Api
+  #         Properties:
+  #           Path: /books
   #           Method: get
   #   Metadata:
   #     DockerTag: nodejs14.x-v1
-  #     DockerContext: ./hello-world
+  #     DockerContext: ./books
   #     Dockerfile: Dockerfile
+  # DeleteBooksFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Policies:
+  #       - DynamoDBCrudPolicy:
+  #           TableName: !Ref MyTable
+  #     # CodeUri: books/
+  #     # Handler: app.delete
+  #     # Runtime: nodejs14.x
+  #     PackageType: Image
+  #     Events:
+  #       ListBooks:
+  #         Type: Api
+  #         Properties:
+  #           Path: /books/{name}
+  #           Method: delete
+  #   Metadata:
+  #     DockerTag: nodejs14.x-v1
+  #     DockerContext: ./books
+  #     Dockerfile: Dockerfile
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /api-doc
+            Method: get
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./api-doc
+      Dockerfile: Dockerfile
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

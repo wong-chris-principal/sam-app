@@ -1,5 +1,6 @@
 const { DynamoDB } = require("aws-sdk");
-
+const fs = require("fs");
+const path = require("path");
 const db = new DynamoDB.DocumentClient();
 const TableName = process.env.TABLE_NAME;
 
@@ -22,6 +23,15 @@ module.exports.create = async (event) => {
   return { statusCode: 200, body: JSON.stringify(newBook) };
 };
 
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     description: Welcome to swagger-jsdoc!
+ *     responses:
+ *       200:
+ *         description: Returns a mysterious string.
+ */
 module.exports.list = async (event) => {
   const books = await db
     .scan({
@@ -29,7 +39,15 @@ module.exports.list = async (event) => {
     })
     .promise();
   console.log("Calling /list");
+
+  let path = "index.html";
+  console.log(`Is ${path} exist?`, fs.existsSync(path));
+  path = `${__dirname}/index.html`;
+  console.log(`Is ${path} exist?`, fs.existsSync(path));
+
   return { statusCode: 200, body: JSON.stringify(books) };
+  // const swaggerContent = fs.readFileSync("index.html").toString();
+  // return { statusCode: 200, body: swaggerContent };
 };
 
 module.exports.delete = async (event) => {

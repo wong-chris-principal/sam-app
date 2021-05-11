@@ -1,3 +1,4 @@
+const fs = require("fs");
 // const axios = require('axios')
 // const url = 'http://checkip.amazonaws.com/';
 let response;
@@ -14,15 +15,27 @@ let response;
  * @returns {Object} object - API Gateway Lambda Proxy Output Format
  *
  */
-exports.lambdaHandler = async (event, context) => {
+module.exports.doc = async (event, context) => {
   try {
+    console.log("Calling /api-doc");
+
+    let path = "index.html";
+    console.log(`Is ${path} exist?`, fs.existsSync(path));
+    path = `${__dirname}/index.html`;
+    console.log(`Is ${path} exist?`, fs.existsSync(path));
     // const ret = await axios(url);
     response = {
       statusCode: 200,
       body: JSON.stringify({
-        message: `v3 - ${new Date()}`,
+        message: `v5 - ${new Date()}`,
         // location: ret.data.trim()
       }),
+    };
+
+    response = {
+      statusCode: 200,
+      body: fs.readFileSync("index.html").toString(),
+      headers: { "content-type": "text/html" },
     };
   } catch (err) {
     console.log(err);
