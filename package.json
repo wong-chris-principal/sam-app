@@ -1,7 +1,7 @@
 {
   "scripts": {
     "generate-openapi-spec": "node openapi-generate-spec.js",
-    "generate-openapi-html": "redoc-cli bundle -o api-doc/index.html swagger.json"
+    "generate-openapi-html": "redoc-cli bundle -o api-doc/index.html ./swagger-ui/swagger.json"
   },
   "dependencies": {
     "swagger-jsdoc": "^6.0.0"
