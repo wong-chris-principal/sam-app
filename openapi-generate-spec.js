@@ -9,7 +9,7 @@ const options = {
       version: "1.0.0",
     },
   },
-  apis: ["./invitation/app.js"], // files containing annotations as above
+  apis: ["./invitations/app.js"], // files containing annotations as above
 };
 
 const openapiSpecification = swaggerJsdoc(options);
