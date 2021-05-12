@@ -17,7 +17,7 @@ Resources:
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: prod
+      StageName: dev
       BinaryMediaTypes: 
       - image~1png
   MyTable:
@@ -123,7 +123,7 @@ Resources:
     Properties:
       PackageType: Image
       ImageConfig:
-        Command: [ "app.get" ]
+        Command: [ "app.getAll" ]
       Events:
         GetInvitation:
           Type: Api
@@ -161,7 +161,7 @@ Outputs:
   ListBooksApi:
     Description: "List books"
     #Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
-    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dev/books/"
   ListBooksFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt ListBooksFunction.Arn

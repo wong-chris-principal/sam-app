@@ -23,15 +23,6 @@ module.exports.create = async (event) => {
   return { statusCode: 200, body: JSON.stringify(newBook) };
 };
 
-/**
- * @openapi
- * /:
- *   get:
- *     description: Welcome to swagger-jsdoc!
- *     responses:
- *       200:
- *         description: Returns a mysterious string.
- */
 module.exports.list = async (event) => {
   const books = await db
     .scan({

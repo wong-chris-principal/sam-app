@@ -1,16 +1,1 @@
-{
-  "openapi": "3.0.0",
-  "info": { "title": "Hello World", "version": "1.0.0" },
-  "paths": {
-    "/": {
-      "get": {
-        "description": "Welcome to swagger-jsdoc!",
-        "responses": {
-          "200": { "description": "Returns a mysterious string." }
-        }
-      }
-    }
-  },
-  "components": {},
-  "tags": []
-}
+{"openapi":"3.0.0","info":{"title":"e-enrollment api","version":"1.0.0"},"paths":{},"components":{},"tags":[]}

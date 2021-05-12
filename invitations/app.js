@@ -6,6 +6,31 @@ const db = new DynamoDB.DocumentClient();
 const TableName = process.env.TABLE_NAME;
 const { uuid } = require("uuidv4");
 
+/**
+ * @invitations
+ * /users:
+ *   post:
+ *     summary: Create a invitation.
+ *     responses:
+ *       201:
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       description: The invitation ID.
+ *                       example: d642fead-55a3-454e-88bf-3188fe467426
+ *                     code:
+ *                       type: string
+ *                       description: The invitatin code.
+ *                       example: c9c549b3-71c3-49af-8a22-1a108a43f3fe
+*/
 module.exports.create = async (event) => {
   const body = JSON.parse(event.body);
   const newInvitation = {
@@ -20,17 +45,23 @@ module.exports.create = async (event) => {
     })
     .promise();
 
-  return { statusCode: 200, body: JSON.stringify(newInvitation) };
+  return { statusCode: 201, body: JSON.stringify(newInvitation) };
 };
 
 /**
  * @openapi
- * /:
+ * /invitations:
  *   get:
- *     description: Welcome to swagger-jsdoc!
+ *     summary: Retrieve a qr code which contains the invitation url
+ *     description: Retrieve a qr code which contains the invitation url by passing in the id
  *     responses:
  *       200:
- *         description: Returns a mysterious string.
+ *         description: QR Code image in png.
+ *         content:
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
  */
 module.exports.get = async (event) => {
   const id = event.pathParameters ? event.pathParameters.id : null;
@@ -65,15 +96,18 @@ module.exports.get = async (event) => {
         isBase64Encoded: true,
       };
     }
-    return { statusCode: 200, body: JSON.stringify({}) };
-  } else {
-    const invitations = await db
-      .scan({
-        TableName,
-      })
-      .promise();
-    return { statusCode: 200, body: JSON.stringify(invitations) };
   }
+  return { statusCode: 200, body: JSON.stringify({}) };
+};
+
+module.exports.getAll = async (event) => {
+  console.log(`Calling /get all invitations`);
+  const invitations = await db
+    .scan({
+      TableName,
+    })
+    .promise();
+  return { statusCode: 200, body: JSON.stringify(invitations) };
 };
 
 // module.exports.delete = async (event) => {

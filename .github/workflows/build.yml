@@ -10,7 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-      - run: npm -v
+      - name: Generate openapi doc in html
+        run: |
+            npm run generate-openapi-spec
+            npm run generate-openapi-html
       - name: Check secret
         id: checksecret_job
         env:
