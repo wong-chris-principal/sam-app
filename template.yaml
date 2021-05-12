@@ -103,6 +103,9 @@ Resources:
   GetInvitationFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MyTable
       PackageType: Image
       ImageConfig:
         Command: [ "app.get" ]
@@ -121,6 +124,9 @@ Resources:
   GetInvitationsFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MyTable
       PackageType: Image
       ImageConfig:
         Command: [ "app.getAll" ]
@@ -139,6 +145,9 @@ Resources:
   CreateInvitationFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MyTable
       PackageType: Image
       ImageConfig:
         Command: [ "app.create" ]
