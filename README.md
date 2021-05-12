@@ -1,6 +1,6 @@
 # sam-app
 
-link: https://1xa7h7edud.execute-api.ap-east-1.amazonaws.com/Prod/hello/
+link:  https://xcxg9pfgs2.execute-api.***.amazonaws.com/dev/invitations/
 
 This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
 
