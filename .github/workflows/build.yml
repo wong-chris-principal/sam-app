@@ -9,12 +9,14 @@ jobs:
       name: uat
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
       - name: Generate openapi doc in html
         run: |
-            npm install
-            npm run generate-openapi-spec
-            npm run generate-openapi-html
+          npm install
+          npm run generate-openapi-spec
+          npm run generate-openapi-html
       - name: Check secret
         id: checksecret_job
         env:
