@@ -7,8 +7,8 @@ const TableName = process.env.TABLE_NAME;
 const { uuid } = require("uuidv4");
 
 /**
- * @invitations
- * /users:
+ * @openapi
+ * /invitations:
  *   post:
  *     summary: Create a invitation.
  *     responses:
