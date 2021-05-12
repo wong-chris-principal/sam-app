@@ -14,61 +14,12 @@ Globals:
         TABLE_NAME: my-table
 
 Resources:
-  CloudFrontOriginAccessIdentity:
-    Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
     Properties:
-      CloudFrontOriginAccessIdentityConfig:
-        Comment: "Serverless website OA"
-
-  CloudfrontDistribution:
-    Type: "AWS::CloudFront::Distribution"
-    Properties:
-      DistributionConfig:
-        Comment: "Cloudfront distribution for serverless website"
-        DefaultRootObject: "index.html"
-        Enabled: true
-        HttpVersion: http2
-        # List of origins that Cloudfront will connect to
-        Origins:
-          - Id: s3-website
-            DomainName: !GetAtt S3Bucket.DomainName
-            S3OriginConfig:
-              # Restricting Bucket access through an origin access identity
-              OriginAccessIdentity:
-                Fn::Sub: "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
-        # To connect the CDN to the origins you need to specify behaviours
-        DefaultCacheBehavior:
-          # Compress resources automatically ( gzip )
-          Compress: "true"
-          AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
-          ForwardedValues:
-            QueryString: false
-          TargetOriginId: s3-website
-          ViewerProtocolPolicy: redirect-to-https
-  S3Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      # Change bucket name to reflect your website
-      BucketName: pihk-e-enrollment-sam
-
-  S3BucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref S3Bucket
-      PolicyDocument:
-      # Restricting access to cloudfront only.
-        Statement:
-          -
-            Effect: Allow
-            Action: 's3:GetObject'
-            Resource:
-              - !Sub "arn:aws:s3:::${S3Bucket}/*"
-            Principal:
-              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginAccessIdentity}"
-
+      StageName: prod
+      BinaryMediaTypes: 
+      - image~1png
   MyTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
@@ -91,26 +42,28 @@ Resources:
   #         Properties:
   #           Path: /book
   #           Method: post
-  # ListBooksFunction:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     Policies:
-  #       - DynamoDBCrudPolicy:
-  #           TableName: !Ref MyTable
-  #     # CodeUri: books/
-  #     # Handler: app.list
-  #     # Runtime: nodejs14.x
-  #     PackageType: Image
-  #     Events:
-  #       ListBooks:
-  #         Type: Api
-  #         Properties:
-  #           Path: /books
-  #           Method: get
-  #   Metadata:
-  #     DockerTag: nodejs14.x-v1
-  #     DockerContext: ./books
-  #     Dockerfile: Dockerfile
+  ListBooksFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MyTable
+      # CodeUri: books/
+      # Handler: app.list
+      # Runtime: nodejs14.x
+      PackageType: Image
+      Events:
+        ListBooks:
+          Type: Api
+          Properties:
+            Path: /books
+            Method: get
+            RestApiId:
+              Ref: ApiGatewayApi
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./books
+      Dockerfile: Dockerfile
   # DeleteBooksFunction:
   #   Type: AWS::Serverless::Function
   #   Properties:
@@ -141,18 +94,74 @@ Resources:
           Properties:
             Path: /api-doc
             Method: get
+            RestApiId:
+              Ref: ApiGatewayApi
     Metadata:
       DockerTag: nodejs14.x-v1
       DockerContext: ./api-doc
       Dockerfile: Dockerfile
-
+  GetInvitationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      ImageConfig:
+        Command: [ "app.get" ]
+      Events:
+        GetInvitation:
+          Type: Api
+          Properties:
+            Path: /invitations/{id}
+            Method: get
+            RestApiId:
+              Ref: ApiGatewayApi
+    Metadata:
+      DockerTag: nodejs14.x-get-invitations-v1
+      DockerContext: ./invitations
+      Dockerfile: Dockerfile
+  GetInvitationsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      ImageConfig:
+        Command: [ "app.get" ]
+      Events:
+        GetInvitation:
+          Type: Api
+          Properties:
+            Path: /invitations
+            Method: get
+            RestApiId:
+              Ref: ApiGatewayApi
+    Metadata:
+      DockerTag: nodejs14.x-get-invitations-v1
+      DockerContext: ./invitations
+      Dockerfile: Dockerfile
+  CreateInvitationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      ImageConfig:
+        Command: [ "app.create" ]
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /invitations
+            Method: post
+            RestApiId:
+              Ref: ApiGatewayApi
+    Metadata:
+      DockerTag: nodejs14.x-create-invitations-v1 
+      DockerContext: ./invitations
+      Dockerfile: Dockerfile
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   ListBooksApi:
     Description: "List books"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
+    #Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
   ListBooksFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt ListBooksFunction.Arn

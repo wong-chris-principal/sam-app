@@ -39,12 +39,6 @@ module.exports.list = async (event) => {
     })
     .promise();
   console.log("Calling /list");
-
-  let path = "index.html";
-  console.log(`Is ${path} exist?`, fs.existsSync(path));
-  path = `${__dirname}/index.html`;
-  console.log(`Is ${path} exist?`, fs.existsSync(path));
-
   return { statusCode: 200, body: JSON.stringify(books) };
   // const swaggerContent = fs.readFileSync("index.html").toString();
   // return { statusCode: 200, body: swaggerContent };
