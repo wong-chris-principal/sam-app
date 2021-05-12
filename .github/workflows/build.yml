@@ -12,6 +12,7 @@ jobs:
       - uses: actions/setup-node@v1
       - name: Generate openapi doc in html
         run: |
+            npm install
             npm run generate-openapi-spec
             npm run generate-openapi-html
       - name: Check secret
