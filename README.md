@@ -2,6 +2,8 @@
 
 link:  https://xcxg9pfgs2.execute-api.ap-east-1.amazonaws.com/dev/invitations/
 
+https://www.qloudx.com/building-a-swagger-ui-for-your-api-in-aws-api-gateway/
+
 This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
 
 - hello-world - Code for the application's Lambda function.
