@@ -9,3 +9,4 @@ region = "ap-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 image_repositories = ["ListBooksFunction=303906804812.dkr.ecr.ap-east-1.amazonaws.com/pihk-enrollment-repository", "HelloWorldFunction=303906804812.dkr.ecr.ap-east-1.amazonaws.com/pihk-enrollment-repository", "GetInvitationFunction=303906804812.dkr.ecr.ap-east-1.amazonaws.com/pihk-enrollment-repository", "GetInvitationsFunction=303906804812.dkr.ecr.ap-east-1.amazonaws.com/pihk-enrollment-repository", "CreateInvitationFunction=303906804812.dkr.ecr.ap-east-1.amazonaws.com/pihk-enrollment-repository"]
+parameter_overrides = "SwaggerSpecURL=\"https://petstore.swagger.io/v2/swagger.json\""

@@ -2,7 +2,13 @@
 
 link:  https://xcxg9pfgs2.execute-api.ap-east-1.amazonaws.com/dev/invitations/
 
+## Swagger UI
 https://www.qloudx.com/building-a-swagger-ui-for-your-api-in-aws-api-gateway/
+
+## Convert to binary
+https://medium.com/@jun711.g/aws-sam-configuration-for-api-gateway-binary-response-payloads-9da4337c3c4a
+https://github.com/aws/serverless-application-model/issues/561
+https://github.com/aws/aws-sam-cli/issues/312
 
 This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
 
