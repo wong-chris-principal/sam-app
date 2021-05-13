@@ -24,8 +24,9 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
+      OpenApiVersion: '3.0.0'
       BinaryMediaTypes: 
-      - image~1png
+      - '*~1*'
   MyTable:
     Type: AWS::Serverless::SimpleTable
     Properties:

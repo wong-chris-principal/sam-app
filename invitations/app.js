@@ -30,7 +30,7 @@ const { uuid } = require("uuidv4");
  *                       type: string
  *                       description: The invitatin code.
  *                       example: c9c549b3-71c3-49af-8a22-1a108a43f3fe
-*/
+ */
 module.exports.create = async (event) => {
   const body = JSON.parse(event.body);
   const newInvitation = {
@@ -90,7 +90,7 @@ module.exports.get = async (event) => {
       return {
         statusCode: 200,
         headers: {
-          "Content-type": "image/png",
+          "Content-Type": "image/png",
         },
         body: qrCodeImage.toString("base64"),
         isBase64Encoded: true,
