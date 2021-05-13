@@ -19,17 +19,14 @@ const { uuid } = require("uuidv4");
  *             schema:
  *               type: object
  *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       description: The invitation ID.
- *                       example: d642fead-55a3-454e-88bf-3188fe467426
- *                     code:
- *                       type: string
- *                       description: The invitatin code.
- *                       example: c9c549b3-71c3-49af-8a22-1a108a43f3fe
+ *                 id:
+ *                   type: string
+ *                   description: The invitation ID.
+ *                   example: d642fead-55a3-454e-88bf-3188fe467426
+ *                 code:
+ *                   type: string
+ *                   description: The invitatin code.
+ *                   example: c9c549b3-71c3-49af-8a22-1a108a43f3fe
  */
 module.exports.create = async (event) => {
   const body = JSON.parse(event.body);
@@ -45,7 +42,13 @@ module.exports.create = async (event) => {
     })
     .promise();
 
-  return { statusCode: 201, body: JSON.stringify(newInvitation) };
+  return {
+    statusCode: 201,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify(newInvitation),
+  };
 };
 
 /**
@@ -90,6 +93,7 @@ module.exports.get = async (event) => {
       return {
         statusCode: 200,
         headers: {
+          "Access-Control-Allow-Origin": "*",
           "Content-Type": "image/png",
         },
         body: qrCodeImage.toString("base64"),
@@ -97,7 +101,13 @@ module.exports.get = async (event) => {
       };
     }
   }
-  return { statusCode: 200, body: JSON.stringify({}) };
+  return {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify({}),
+  };
 };
 
 module.exports.getAll = async (event) => {
@@ -107,7 +117,13 @@ module.exports.getAll = async (event) => {
       TableName,
     })
     .promise();
-  return { statusCode: 200, body: JSON.stringify(invitations) };
+  return {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify(invitations),
+  };
 };
 
 // module.exports.delete = async (event) => {

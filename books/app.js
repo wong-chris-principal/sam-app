@@ -30,7 +30,7 @@ module.exports.list = async (event) => {
     })
     .promise();
   console.log("Calling /list");
-  return { statusCode: 200, body: JSON.stringify(books) };
+  return { statusCode: 200, body: JSON.stringify({ env: "dev", books }) };
   // const swaggerContent = fs.readFileSync("index.html").toString();
   // return { statusCode: 200, body: swaggerContent };
 };

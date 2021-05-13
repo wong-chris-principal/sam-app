@@ -24,9 +24,11 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
-      OpenApiVersion: '3.0.0'
-      BinaryMediaTypes: 
-      - '*~1*'
+      Cors:
+        AllowOrigin: "'*'"
+      OpenApiVersion: "3.0.0"
+      BinaryMediaTypes:
+        - "*~1*"
   MyTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
@@ -140,7 +142,7 @@ Resources:
             TableName: !Ref MyTable
       PackageType: Image
       ImageConfig:
-        Command: [ "app.get" ]
+        Command: ["app.get"]
       Events:
         GetInvitation:
           Type: Api
@@ -161,7 +163,7 @@ Resources:
             TableName: !Ref MyTable
       PackageType: Image
       ImageConfig:
-        Command: [ "app.getAll" ]
+        Command: ["app.getAll"]
       Events:
         GetInvitation:
           Type: Api
@@ -182,7 +184,7 @@ Resources:
             TableName: !Ref MyTable
       PackageType: Image
       ImageConfig:
-        Command: [ "app.create" ]
+        Command: ["app.create"]
       Events:
         HelloWorld:
           Type: Api
@@ -192,7 +194,7 @@ Resources:
             RestApiId:
               Ref: ApiGatewayApi
     Metadata:
-      DockerTag: nodejs14.x-create-invitations-v1 
+      DockerTag: nodejs14.x-create-invitations-v1
       DockerContext: ./invitations
       Dockerfile: Dockerfile
 Outputs:

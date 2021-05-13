@@ -1,12 +1,16 @@
 {
   "scripts": {
     "generate-openapi-spec": "node openapi-generate-spec.js",
-    "generate-openapi-html": "redoc-cli bundle -o api-doc/index.html ./swagger-ui/swagger.json"
+    "generate-openapi-html": "redoc-cli bundle -o api-doc/index.html ./swagger-ui/swagger.json",
+    "clean-api-client": "rimraf ./generated",
+    "generate-openapi-client": "npm run clean-api-client && npm run generate-openapi-spec && openapi-generator-cli generate -g typescript-fetch -i ./swagger-ui/swagger.json -o ./generated/ts/api-client --additional-properties=supportsES6=true"
   },
   "dependencies": {
     "swagger-jsdoc": "^6.0.0"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.2.6",
+    "rimraf": "^3.0.2",
     "redoc-cli": "^0.11.4"
   }
 }
