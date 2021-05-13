@@ -1,6 +1,6 @@
 # sam-app
 
-link:  https://8df33t2xdh.execute-api.ap-east-1.amazonaws.com/dev/books/    
+link:   https://srrpqge9s3.execute-api.ap-east-1.amazonaws.com/dev/invitations/  
 
 ## Swagger UI
 https://www.qloudx.com/building-a-swagger-ui-for-your-api-in-aws-api-gateway/
