@@ -9,9 +9,9 @@ const options = {
       version: "1.0.0",
     },
   },
-  apis: ["./invitations/app.js"], // files containing annotations as above
+  apis: ["./apis/invitations/app.js"], // files containing annotations as above
 };
 
 const openapiSpecification = swaggerJsdoc(options);
 
-fs.writeFileSync("swagger-ui/swagger.json", JSON.stringify(openapiSpecification));
+fs.writeFileSync("apis/swagger-ui/swagger.json", JSON.stringify(openapiSpecification));

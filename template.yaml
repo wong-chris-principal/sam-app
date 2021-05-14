@@ -14,10 +14,10 @@ Globals:
         TABLE_NAME: my-table
 
 Parameters:
-  SwaggerSpecURL:
+  StageName:
     Type: String
-    Default: https://petstore.swagger.io/v2/swagger.json
-    Description: Enter a publicly accessible URL to the Swagger spec JSON/YAML.
+    Default: dev
+    Description: The stages of the api gateway e.g. dev
 
 Resources:
   ApiGatewayApi:
@@ -40,12 +40,12 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Description: The Lambda function that serves the Swagger UI.
-      CodeUri: swagger-ui/
-      Handler: app.handler
-      Runtime: nodejs14.x
       Environment:
         Variables:
-          SWAGGER_SPEC_URL: !Ref SwaggerSpecURL
+          STAGE_NAME: !Ref StageName
+      PackageType: Image
+      ImageConfig:
+        Command: ["app.handler"]
       Events:
         SwaggerUiApi:
           Type: Api
@@ -61,6 +61,10 @@ Resources:
             Method: GET
             RestApiId:
               Ref: ApiGatewayApi
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./apis/swagger-ui
+      Dockerfile: Dockerfile
   # CreateBookFunction:
   #   Type: AWS::Serverless::Function
   #   Properties:
@@ -96,7 +100,7 @@ Resources:
               Ref: ApiGatewayApi
     Metadata:
       DockerTag: nodejs14.x-v1
-      DockerContext: ./books
+      DockerContext: ./apis/books
       Dockerfile: Dockerfile
   # DeleteBooksFunction:
   #   Type: AWS::Serverless::Function
@@ -118,22 +122,6 @@ Resources:
   #     DockerTag: nodejs14.x-v1
   #     DockerContext: ./books
   #     Dockerfile: Dockerfile
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      PackageType: Image
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /api-doc
-            Method: get
-            RestApiId:
-              Ref: ApiGatewayApi
-    Metadata:
-      DockerTag: nodejs14.x-v1
-      DockerContext: ./api-doc
-      Dockerfile: Dockerfile
   GetInvitationFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -152,8 +140,8 @@ Resources:
             RestApiId:
               Ref: ApiGatewayApi
     Metadata:
-      DockerTag: nodejs14.x-get-invitations-v1
-      DockerContext: ./invitations
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./apis/invitations
       Dockerfile: Dockerfile
   GetInvitationsFunction:
     Type: AWS::Serverless::Function
@@ -173,8 +161,8 @@ Resources:
             RestApiId:
               Ref: ApiGatewayApi
     Metadata:
-      DockerTag: nodejs14.x-get-invitations-v1
-      DockerContext: ./invitations
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./apis/invitations
       Dockerfile: Dockerfile
   CreateInvitationFunction:
     Type: AWS::Serverless::Function
@@ -186,7 +174,7 @@ Resources:
       ImageConfig:
         Command: ["app.create"]
       Events:
-        HelloWorld:
+        CreateInvitation:
           Type: Api
           Properties:
             Path: /invitations
@@ -194,8 +182,8 @@ Resources:
             RestApiId:
               Ref: ApiGatewayApi
     Metadata:
-      DockerTag: nodejs14.x-create-invitations-v1
-      DockerContext: ./invitations
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./apis/invitations
       Dockerfile: Dockerfile
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
